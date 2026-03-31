@@ -2,36 +2,736 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One · 柴柴的生活日記</title>
+  <meta name="description" content="這是 One 的個人網站，介紹這隻可愛柴犬的日常生活、獨門技能、精選照片，以及如何與 One 的媽媽取得聯繫。" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; max-width: 100%; }
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans TC", Arial, sans-serif; line-height: 1.6; }
-    img { max-width: 100%; height: auto; display: block; }
-    .container { width: 1920px; margin: 0 auto; padding: 16px; }
-    nav a { margin-right: 12px; text-decoration: none; }
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
-    .col-12 { grid-column: span 12; }
-    @media (min-width: 768px) { .col-md-6 { grid-column: span 6; } }
-    .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    /* CSS:BASE-START */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --color-bg:          #faf7f0;
+      --color-surface:     #f3ece0;
+      --color-surface-alt: #ede4d3;
+      --color-accent:      #c8763a;
+      --color-accent-dark: #a85e28;
+      --color-text:        #2c1a0e;
+      --color-text-muted:  #7a5c44;
+      --color-border:      #d4c4ae;
+      --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                     Helvetica, Arial, sans-serif;
+      --max-width: 1100px;
+      --section-gap: 5rem;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-system);
+      font-size: 1rem;
+      line-height: 1.75;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin-inline: auto;
+      padding-inline: 1.25rem;
+    }
+
+    .section {
+      padding-block: var(--section-gap);
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 1.25rem;
+      position: relative;
+      padding-bottom: 0.75rem;
+    }
+
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 3rem;
+      height: 3px;
+      background-color: var(--color-accent);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .placeholder-text {
+      color: var(--color-text-muted);
+      font-style: italic;
+      line-height: 1.75;
+    }
+
+    .placeholder-text + .placeholder-text {
+      margin-top: 0.75rem;
+    }
+
+    /* 導覽列 */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(250, 247, 240, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 60px;
+    }
+
+    .nav-logo {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--color-text);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-block: 1rem;
+    }
+
+    .nav-logo:hover {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    /* 漢堡按鈕（純 CSS checkbox hack） */
+    .nav-toggle-input {
+      display: none;
+    }
+
+    .nav-toggle-btn {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+
+    .nav-toggle-btn:hover {
+      background-color: rgba(200, 118, 58, 0.1);
+    }
+
+    .nav-toggle-bar {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: var(--color-text);
+      border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
+    }
+
+    /* 漢堡 → X 動畫（checkbox checked 時） */
+    .nav-toggle-input:checked ~ .nav-toggle-btn .nav-toggle-bar:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-toggle-input:checked ~ .nav-toggle-btn .nav-toggle-bar:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .nav-toggle-input:checked ~ .nav-toggle-btn .nav-toggle-bar:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    /* 行動版：選單預設收合 */
+    .nav-links {
+      display: none;
+      list-style: none;
+      flex-direction: column;
+      width: 100%;
+      padding: 0.25rem 0 1rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .nav-toggle-input:checked ~ .nav-links {
+      display: flex;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 0.7rem 0;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-text-muted);
+      transition: color 0.15s;
+      text-decoration: none;
+    }
+
+    .nav-link:hover {
+      color: var(--color-accent);
+      text-decoration: none;
+    }
+
+    /* 按鈕 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.625rem 1.5rem;
+      border-radius: 6px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background-color: var(--color-accent);
+      color: #fff;
+      border: 2px solid var(--color-accent);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-accent-dark);
+      border-color: var(--color-accent-dark);
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+    }
+
+    .btn-outline:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      text-decoration: none;
+    }
+
+    /* 頁尾 */
+    .site-footer {
+      background-color: var(--color-surface);
+      border-top: 1px solid var(--color-border);
+      padding-block: 2rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin-top: auto;
+    }
+
+    .site-footer a {
+      color: var(--color-accent);
+    }
+    /* CSS:BASE-END */
+
+    /* CSS:HERO-START */
+    .section-hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      background-image: url('https://images.unsplash.com/photo-1578133507770-a35cc3c786e6?w=1400&auto=format&fit=crop&q=85');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(25, 12, 4, 0.68) 0%,
+        rgba(25, 12, 4, 0.35) 60%,
+        rgba(25, 12, 4, 0.15) 100%
+      );
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .hero-content {
+      max-width: 560px;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #f5c98a;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-title .highlight {
+      color: #f5c98a;
+    }
+
+    .hero-description {
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 1.0625rem;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    /* CSS:HERO-END */
+
+    /* CSS:ABOUT-START */
+    .section-about {
+      background-color: var(--color-surface);
+    }
+
+    .about-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .about-image-wrap {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      flex-shrink: 0;
+    }
+
+    .about-image-wrap img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .about-text p + p {
+      margin-top: 0.75rem;
+    }
+    /* CSS:ABOUT-END */
+
+    /* CSS:SKILLS-START */
+    .section-skills {
+      background-color: var(--color-bg);
+    }
+
+    .skill-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.875rem;
+      list-style: none;
+      margin-top: 1.5rem;
+    }
+
+    .skill-item {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9375rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+
+    .skill-item::before {
+      content: "▸";
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+    /* CSS:SKILLS-END */
+
+    /* CSS:PROJECTS-START */
+    .section-projects {
+      background-color: var(--color-surface);
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .project-card {
+      background-color: var(--color-surface-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .project-card:hover {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 1px var(--color-accent),
+                  0 4px 20px rgba(200, 118, 58, 0.12);
+    }
+
+    .project-card-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .project-card-body {
+      padding: 1.25rem;
+    }
+
+    .project-card-title {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.4rem;
+    }
+
+    .project-card-desc {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      font-style: italic;
+    }
+    /* CSS:PROJECTS-END */
+
+    /* CSS:CONTACT-START */
+    .section-contact {
+      background-color: var(--color-bg);
+    }
+
+    .contact-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9375rem;
+    }
+
+    .contact-label {
+      color: var(--color-text-muted);
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+
+    .contact-link {
+      color: var(--color-accent);
+      font-weight: 500;
+    }
+
+    .contact-link:hover {
+      text-decoration: underline;
+    }
+    /* CSS:CONTACT-END */
+
+    /* CSS:RWD-START */
+    @media (min-width: 768px) {
+      :root {
+        --section-gap: 6.5rem;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+      }
+
+      .about-grid {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 3rem;
+      }
+
+      .about-image-wrap {
+        width: 300px;
+      }
+
+      .skill-list {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .project-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      /* 桌機版：漢堡隱藏，選單恢復橫向 */
+      .nav-toggle-btn {
+        display: none;
+      }
+
+      .nav-links {
+        display: flex !important;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        padding: 0;
+        border-top: none;
+        gap: 0.5rem 2rem;
+      }
+
+      .nav-link {
+        padding: 0;
+        font-size: 0.875rem;
+      }
+    }
+
+    @media (min-width: 1440px) {
+      .hero-title {
+        font-size: 3.5rem;
+      }
+
+      .skill-list {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .project-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    /* CSS:RWD-END */
   </style>
 </head>
 <body>
-  <header class="container" role="banner">
-    <nav aria-label="主選單">
-      <a href="#about">關於我</a>
-      <a href="#projects">作品集</a>
-      <a href="https://example.com/blog">技術部落格</a>
-      <a href="mailto:me@example.com">聯絡我</a>
-    </nav>
-    <h1>你好，我是小明：前端工程師新手之路</h1>
-    <h1>你好，我是小明：前端工程師新手之路</h1>
-    <p>歡迎來到我的個人網站！這裡整理了學習紀錄、Side Project 與實作心得。</p>
-  </header>
+  <div class="page">
 
-  <footer class="container" role="contentinfo">
-    <p>© 2025 My Portfolio · <a href="#">GitHub</a></p>
-    <img src="https://source.unsplash.com/600x200/?technology,abstract" alt="">
-  </footer>
+    <header class="site-header">
+      <div class="container">
+        <nav class="nav" aria-label="主要導覽">
+          <a href="#hero" class="nav-logo">One · 柴柴日記</a>
+          <input type="checkbox" id="nav-toggle" class="nav-toggle-input" aria-hidden="true" />
+          <label for="nav-toggle" class="nav-toggle-btn" aria-label="開啟／關閉選單">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+          </label>
+          <ul class="nav-links">
+            <li><a href="#hero"    class="nav-link">首頁</a></li>
+            <li><a href="#about"   class="nav-link">關於One</a></li>
+            <li><a href="#skills"  class="nav-link">技能</a></li>
+            <li><a href="#photo"   class="nav-link">照片集</a></li>
+            <li><a href="#contact" class="nav-link">聯絡我</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- SECTION:HERO-START -->
+      <section id="hero" class="section section-hero">
+        <div class="container">
+          <div class="hero-inner">
+            <div class="hero-content">
+              <span class="hero-eyebrow">柴犬 · 汪星來客</span>
+              <h1 class="hero-title">
+                嗨，我是<span class="highlight">One</span>！<br />
+                汪！汪！汪！
+              </h1>
+              <p class="hero-description">
+                大家好呀！我是 One，一隻熱愛曬太陽、追球球、偶爾裝作聽不懂指令的快樂柴犬！
+              </p>
+              <div class="hero-actions">
+                <a href="#photo"   class="btn btn-primary">看我照片</a>
+                <a href="#contact" class="btn btn-outline">聯絡我</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SECTION:HERO-END -->
+
+      <!-- SECTION:ABOUT-START -->
+      <section id="about" class="section section-about" aria-labelledby="about-heading">
+        <div class="container">
+          <h2 id="about-heading" class="section-title">關於 One</h2>
+          <div class="about-grid">
+            <div class="about-image-wrap">
+              <img
+                src="https://images.unsplash.com/photo-1703955942680-b6f713502306?w=600&auto=format&fit=crop&q=80"
+                alt="可愛的柴犬 One 戴眼鏡模樣"
+                loading="lazy"
+              />
+            </div>
+            <div class="about-text">
+              <p>
+                大家好，我是 <strong>One</strong>，一隻活潑開朗的柴犬，今年 3 歲，住在溫暖的台灣。我的個性熱情又黏人，喜歡跟主人撒嬌，但遇到陌生人又會故作冷靜，超有自己的性格！
+              </p>
+              <p>
+                我最愛的事情是早上去公園追球、吃雞肉零食，還有佔據沙發最舒服的那個角落。每天下午的陽光浴是我的必備行程，曬著曬著就不小心睡著了，非常充實的一天呢！
+              </p>
+              <p>
+                如果你家的汪汪也是E狗，歡迎跟我的媽媽聯絡，說不定哪天我們可以一起去狗狗公園玩耍！汪！
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- SECTION:ABOUT-END -->
+
+      <!-- SECTION:SKILLS-START -->
+      <section id="skills" class="section section-skills" aria-labelledby="skills-heading">
+        <div class="container">
+          <h2 id="skills-heading" class="section-title">One 的獨門技能</h2>
+          <p class="placeholder-text">
+            汪汪汪，這些都是我拿手擅長的技能哦！不過有時候我也會裝作聽不懂，讓媽媽哭笑不得呢！
+          </p>
+          <ul class="skill-list">
+            <li class="skill-item">坐下</li>
+            <li class="skill-item">握手</li>
+            <li class="skill-item">裝死</li>
+            <li class="skill-item">翻滾</li>
+            <li class="skill-item">叼球回來</li>
+            <li class="skill-item">用眼神索食</li>
+          </ul>
+        </div>
+      </section>
+      <!-- SECTION:SKILLS-END -->
+
+      <!-- SECTION:PROJECTS-START -->
+      <section id="photo" class="section section-projects" aria-labelledby="photo-heading">
+        <div class="container">
+          <h2 id="photo-heading" class="section-title">One 的照片集（徵友中?!）</h2>
+          <p class="placeholder-text">
+            我超帥的吧，我是世界無敵大帥狗，沒有錯！！不容反駁！！
+          </p>
+          <div class="project-grid">
+            <article class="project-card">
+              <img
+                class="project-card-image"
+                src="https://images.unsplash.com/photo-1578133559556-9e83af5fc5f3?w=600&auto=format&fit=crop&q=80"
+                alt="One 在公園草地上的可愛模樣"
+                loading="lazy"
+              />
+              <div class="project-card-body">
+                <h3 class="project-card-title">公園散步日</h3>
+                <p class="project-card-desc">2026.02.11</p>
+              </div>
+            </article>
+            <article class="project-card">
+              <img
+                class="project-card-image"
+                src="https://images.unsplash.com/photo-1735590277128-ff1b02749ea6?w=600&auto=format&fit=crop&q=80"
+                alt="柴犬 One 在草地上玩耍的溫馨畫面"
+                loading="lazy"
+              />
+              <div class="project-card-body">
+                <h3 class="project-card-title">與好朋友玩耍</h3>
+                <p class="project-card-desc">2026.02.12</p>
+              </div>
+            </article>
+            <article class="project-card">
+              <img
+                class="project-card-image"
+                src="https://plus.unsplash.com/premium_photo-1718652942341-3cbe0512171e?w=600&auto=format&fit=crop&q=80"
+                alt="柴犬 One 慵懶休息的可愛模樣"
+                loading="lazy"
+              />
+              <div class="project-card-body">
+                <h3 class="project-card-title">沙發休憩時光</h3>
+                <p class="project-card-desc">2026.02.13</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <!-- SECTION:PROJECTS-END -->
+
+      <!-- SECTION:CONTACT-START -->
+      <section id="contact" class="section section-contact" aria-labelledby="contact-heading">
+        <div class="container">
+          <h2 id="contact-heading" class="section-title">聯絡 One 的媽媽</h2>
+          <p class="placeholder-text">
+我是超級大E狗，歡迎來找我玩，不過要先跟我的媽媽聯絡哦！她會幫我們安排一些有趣的活動，讓我們一起開心玩耍吧！汪！
+          </p>
+          <ul class="contact-list">
+            <li class="contact-item">
+              <span class="contact-label">Email</span>
+              <a href="mailto:hello@example.com" class="contact-link">hello@example.com</a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-label">Instagram</span>
+              <a href="https://www.instagram.com/yourname" class="contact-link"
+                 target="_blank" rel="noopener noreferrer">@one_the_shiba</a>
+            </li>
+            <li class="contact-item">
+              <span class="contact-label">Facebook</span>
+              <a href="https://www.facebook.com/yourname" class="contact-link"
+                 target="_blank" rel="noopener noreferrer">One 柴柴日記</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+      <!-- SECTION:CONTACT-END -->
+
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© 2026 One · 柴柴日記　·　用滿滿的愛純手工打造</p>
+      </div>
+    </footer>
+
+  </div>
 </body>
 </html>
